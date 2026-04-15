@@ -16,14 +16,14 @@ if ! [[ "$INTERVAL" =~ ^[0-9]+$ ]] || ["$INTERVAL" -le 0 ]; then
 	exit 1
 fi
 
-# ---------- Variables globales ----------
+
 PID=""
 LOGFILE=""
 PNGFILE=""
 DATAFILE=""
 START_EPOCH=""
 
-# ---------- Función de limpieza y graficación ----------
+# Función
 generar_grafica() {
     # Si no existe log o está vacío, no se grafica
     if [ ! -f "$LOGFILE" ] || [ ! -s "$LOGFILE" ]; then
@@ -93,7 +93,7 @@ EOF
     rm -f "$GNUPLOT_SCRIPT"
 }
 
-# ---------- R4. Manejo de Ctrl+C ----------
+
 manejar_sigint() {
     echo
     echo "Interrupción detectada (Ctrl+C)."
@@ -110,7 +110,7 @@ manejar_sigint() {
 
 trap manejar_sigint SIGINT
 
-# ---------- R2. Ejecución del proceso ----------
+# Ejecucion
 bash -c "$CMD" &
 PID=$!
 
@@ -125,7 +125,7 @@ echo "Log     : $LOGFILE"
 
 START_EPOCH=$(date +%s)
 
-# ---------- R3. Registro periódico ----------
+# Registro
 while kill -0 "$PID" 2>/dev/null; do
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
@@ -144,7 +144,7 @@ done
 # Esperar al proceso por limpieza
 wait "$PID" 2>/dev/null
 
-# ---------- R5. Graficación ----------
+# Graficación 
 generar_grafica
 
 echo "Monitoreo finalizado."
