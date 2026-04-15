@@ -130,7 +130,7 @@ while kill -0 "$PID" 2>/dev/null; do
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
     # ps devuelve: %cpu %mem rss
-    read -r CPU MEM RSS <<< "$(ps -p "$PID" -o %cpu,%mem,rss --no-headers 2>/dev/null | awk '{print $1, $2, $3}')"
+    read -r CPU MEM RSS <<< "$(ps -o %cpu,%mem,rss --no-headers -p $(pgrep -P $PID | tr '\n' ',') 2>/dev/null | awk '{print $1, $2, $3}')"
 
     # Si el proceso terminó justo entre kill y ps, salir del ciclo
     if [ -z "${CPU:-}" ] || [ -z "${MEM:-}" ] || [ -z "${RSS:-}" ]; then
